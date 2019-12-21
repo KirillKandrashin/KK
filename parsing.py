@@ -105,10 +105,10 @@ def find_all_cinemas_KARO(theatres):
     return dicti
 
 def cinema_id_get(name,cinemas):
-    for i in cinemas:
+    for ob in cinemas:
         if name==i[2]:
             return i[0]
-    for i in cinemas:
+    for ob in cinemas:
         if (name in i[2]) or (i[2] in name):
             return i[0]
 
