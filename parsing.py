@@ -24,8 +24,8 @@ def delete_tables(cursor):                            #удаляем табли
         print('Еще не создана') 
         
 def create_cinemas(cursor):                #создаем таблицу с названиями всех сетей кинотеатров для парсинга, если такой еще не существует
-    try:
-        cursor.execute('''CREATE TABLE cinemas(         #таблица содержит номер(индекс/id) каждой сети кинотеатров и ее название
+    try:                                            #таблица содержит номер(индекс/id) каждой сети кинотеатров и ее название
+        cursor.execute('''CREATE TABLE cinemas(         
                         id integer PRIMARY KEY,
                         name text NOT NULL)''')
     except sqlite3.OperationalError:
@@ -40,9 +40,9 @@ def create_cinema_halls(cursor):                     #создаем табли�
                     name text NOT NULL,
                     address text NOT NULL,
                     metro text NULL,
-                    phone text NULL,
-                    FOREIGN KEY (brand_id) REFERENCES brand(id)  #объект brand_id берет свое значение по ссылке в таблице, где оно уже есть
-                    )""")
+                    phone text NULL,                                
+                    FOREIGN KEY (brand_id) REFERENCES brand(id)  
+                    )""")                               #объект brand_id берет свое значение по ссылке в таблице, где оно уже есть
     except sqlite3.OperationalError:
         print('Что делаешь? Таблица то уже создана!')        
 
@@ -60,7 +60,7 @@ def create_films(cursor):                     #создаем таблицу с�
         print('Ошибка! Таблица уже создана')   
         
 def create_table_sessions(cursor):                    #создаем таблицу со всеми харктеристиками идущего в кинотеатрах кино(номер, номер кино на сайте, номер кинотеатра, дата, время, цена билета)
-    try:
+    try:                                    
         cursor.execute("""CREATE TABLE sessions(
                     id integer PRIMARY KEY,
                     films_id integer Not NULL,
@@ -68,9 +68,9 @@ def create_table_sessions(cursor):                    #создаем табли
                     date date NOT NULL,
                     time time NOT NULL,
                     price text NULL,
-                    FOREIGN KEY (films_id) REFERENCES films(id),    #объекты cinema_id и hall_id ссылаются на значения в таблицах, в которых они уже записаны
+                    FOREIGN KEY (films_id) REFERENCES films(id),    
                     FOREIGN KEY (hall_id) REFERENCES cinema_halls(id)
-                    )""")
+                    )""")                                                           #объекты cinema_id и hall_id ссылаются на значения в таблицах, в которых они уже записаны
     except sqlite3.OperationalError:
         print('Ошибка! Таблица уже создана')     
         
@@ -94,7 +94,7 @@ def remove_all(string):                       #функция очистки т�
     return pattern.findall(string)[0].strip()
     
 def find_all_cinemas_KARO(theatres):
-    dict = {}
+    dicti = {}
     metro_class = 'cinemalist__cinema-item__metro__station-list__station-item'
     for theater in theatres:
         dict[theater.findAll('h4')[0].text.strip()] = {
@@ -103,5 +103,15 @@ def find_all_cinemas_KARO(theatres):
             'phone': '+' + theater.findAll('p')[0].text.split('+')[-1].strip(),
             'data-id': theater['data-id']}
     return dicti
+
+def cinema_id_get(name,cinemas):
+    for i in cinemas:
+        if name==i[2]:
+            return i[0]
+    for i in cinemas:
+        if (name in i[2]) or (i[2] in name):
+            return i[0]
+
+
     
     
