@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import sqlite3
-conn=sqlite3.connect('mydatabase.db')                    #создаем базу данных с именем mydatabase
+conn=sqlite3.connect('cinemas.db')                    #создаем базу данных с именем mydatabase
 cursor=conn.cursor()                                    #cursor позволяет нам работать с базой данных
 
 def delete_tables(cursor):                            #удаляем таблицы, созданные ранее
