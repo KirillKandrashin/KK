@@ -3,7 +3,7 @@ from random import randrange
 import json
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
-conn=sqlite3.connect('cinemas.db')
+conn=sqlite3.connect('mydatabase.db')
 cursor=conn.cursor()
 
 def write_msg(user_id, message,keyboard=None):
