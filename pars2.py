@@ -2,10 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import sqlite3
-conn=sqlite3.connect('mydatabase.db')          
-cursor=conn.cursor()
+conn=sqlite3.connect('mydatabase.db')   #создаем базу данных        
+cursor=conn.cursor()                    #c которой будет взаимодействовать курсором
 
-def delete_tables(cursor):
+def delete_tables(cursor):                      #удаляю все таблицы, если необходимо переписать базу данных
     try:
         cursor.execute('drop table cinema')
     except sqlite3.OperationalError:
@@ -23,7 +23,7 @@ def delete_tables(cursor):
     except sqlite3.OperationalError:
         print('Такой таблицы нет')    
 
-def create_cinema(cursor):
+def create_cinema(cursor):                          #создаю таблицу с номерами и названиями кинотеатров
     try:
         cursor.execute('''CREATE TABLE cinema(
                         id integer PRIMARY KEY,
@@ -31,7 +31,7 @@ def create_cinema(cursor):
     except sqlite3.OperationalError:
         print('Ошибка! Такая таблица уже существует')
         
-def create_cinema_halls(cursor):
+def create_cinema_halls(cursor):                            #создаю таблицу с информацией по всем кинотеатрам
     try:
         cursor.execute("""CREATE TABLE cinema_halls(
                     id integer PRIMARY KEY,
@@ -46,7 +46,7 @@ def create_cinema_halls(cursor):
     except sqlite3.OperationalError:
         print('Ошибка! Такая таблица уже существует')
 
-def create_films(cursor):
+def create_films(cursor):                           #создаю таблицу с информацией о всех фильмах
     try:
         cursor.execute("""CREATE TABLE films(
                     id integer PRIMARY KEY,
@@ -58,7 +58,7 @@ def create_films(cursor):
     except sqlite3.OperationalError:
         print('Ошибка! Такая таблица уже существует')
         
-def create_sessions(cursor):
+def create_sessions(cursor):                                    #создаю таблицу с информацией о всех сеансах
     try:
         cursor.execute("""CREATE TABLE sessions(
                     id integer PRIMARY KEY,
@@ -72,13 +72,13 @@ def create_sessions(cursor):
     except sqlite3.OperationalError:
         print('Ошибка! Такая таблица уже существует')
         
-def create_tables(cursor):
+def create_tables(cursor):                      #создаю таблицы
     create_cinema(cursor)
     create_cinema_halls(cursor)
     create_films(cursor)
     create_sessions(cursor)
     
-def add_cinemas(cursor):
+def add_cinemas(cursor):                    #добавляю нужные кинотеатры в 1ю таблицу с номерами 1 и 2
     try:
         cursor.execute("insert into cinema values (1, 'КАРО')")
         cursor.execute("insert into cinema values (2, 'КИНОМАКС')")
@@ -86,11 +86,11 @@ def add_cinemas(cursor):
     except sqlite3.IntegrityError:
         print('Ошибка! id не уникален')
 
-def remove_all(string):
+def remove_all(string):                                 
     pattern = re.compile(r'[А-Яа-яёЁ0-9 ]+')
     return pattern.findall(string)[0].strip()
 
-def find_all_theaters_KARO(theatres):
+def find_all_theaters_KARO(theatres):               #нахожу информацию по всем кинотеатрам сети KARO и возвращаю словарь
     dicti = {}
     metro_class = 'cinemalist__cinema-item__metro__station-list__station-item'
     for theater in theatres:
@@ -102,12 +102,12 @@ def find_all_theaters_KARO(theatres):
     return dicti
 
 def film_id_get(name,films):
+    for obj in films:
+        if name==obj[2]:
+            return obj[0]
     for el in films:
-        if name==el[2]:
-            return el[0]
-    for el in films:
-        if (name in el[2]) or (el[2] in name):
-            return el[0]
+        if (name in obj[2]) or (obj[2] in name):
+            return obj[0]
 
 def parsing_karo(cursor):
     url = "https://karofilm.ru"
